@@ -1,0 +1,122 @@
+buildscript {
+    ext {
+        versionFiles = [
+            node: 'node_modules/.nodeVersion',
+            npm: 'node_modules/.npmVersion',
+            yarn: 'node_modules/.yarnVersion'
+        ]
+    }
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:1.0.1"
+    }
+}
+apply plugin: 'com.moowork.node'
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        output.dir("$buildDir/webjar", builtBy: "buildWeb")
+    }
+}
+
+node {
+    workDir = file("$projectDir/.node")
+    version = "6.9.5"
+    npmVersion = "3.10.10"
+    yarnVersion = "0.19.1"
+    download = true
+}
+
+void createTimeMarker(String fileName) {
+    Date now = new Date()
+    File file = file(fileName)
+    file.getParentFile().mkdirs()
+    file.newWriter().withWriter { w ->
+        w << now.format("yyyy-MM-dd'T'HH:mm:ss.SSS")
+    }
+}
+
+String fileContent(String fileName, String defaultContent = "undefined") {
+    File target = file(fileName)
+    return target.isFile() ? target.text : defaultContent
+}
+
+task checkNodeVersion() {
+    group "build"
+    description "Remove node_modules on node update"
+    String lastNodeVersion = fileContent(versionFiles.node)
+    String lastNpmVersion = fileContent(versionFiles.npm)
+    String lastYarnVersion = fileContent(versionFiles.yarn)
+    boolean changed = [
+        lastNodeVersion == node.version,
+        lastNpmVersion == node.npmVersion,
+        lastYarnVersion == node.yarnVersion,
+    ].any { !it }
+    if (changed) {
+        println "Node version changed - removing node_modules in order to rebuild them"
+        println "  Node: $lastNodeVersion -> ${node.version}"
+        println "  NPM:  $lastNpmVersion -> ${node.npmVersion}"
+        println "  Yarn: $lastYarnVersion -> ${node.yarnVersion}"
+        File nodeModulesDir = file("node_modules")
+        nodeModulesDir.deleteDir()
+        nodeModulesDir.mkdirs()
+    }
+}
+
+task installModules(type: YarnTask, dependsOn: "checkNodeVersion") {
+    group "web"
+    description "Install node modules incrementally"
+    inputs.files "yarn.lock", "package.json"
+    outputs.dir "node_modules"
+    args = ["install"]
+    doLast {
+        file(versionFiles.node).write(node.version)
+        file(versionFiles.npm).write(node.npmVersion)
+        file(versionFiles.yarn).write(node.yarnVersion)
+    }
+}
+
+task buildWeb(type: YarnTask, dependsOn: "installModules") {
+    group "web"
+    description "Build single page application"
+    args = ["run", "build-webjar"]
+    inputs.dir "src"
+    inputs.dir "lib"
+    inputs.dir "node_modules"
+    inputs.files ".babelrc", "package.json", "webpack.babel.js"
+    outputs.dir "$buildDir/webjar"
+    args = ["run", "build-webjar"]
+}
+
+task lintWeb(type: YarnTask, dependsOn: "installModules") {
+    group "web"
+    description "Lint sources"
+    args = ["run", "lint"]
+    inputs.dir "src"
+    inputs.dir "lib"
+    inputs.files ".eslintrc", ".eslinignore"
+    outputs.dir "$buildDir/last-lint"
+    doLast {
+        createTimeMarker("$buildDir/last-lint")
+    }
+}
+
+task testWeb(type: YarnTask, dependsOn: ["lintWeb", "installModules"]) {
+    group "web"
+    description "Test web application"
+    args = ["run", "test"]
+    inputs.dir "src"
+    inputs.dir "test"
+    inputs.dir "lib"
+    inputs.files ".babelrc", "package.json"
+    outputs.dir "$buildDir/last-test"
+    doLast {
+        createTimeMarker("$buildDir/last-test")
+    }
+}
+
+processResources.dependsOn buildWeb
+test.dependsOn testWeb

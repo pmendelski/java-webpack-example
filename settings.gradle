@@ -1,2 +1,3 @@
 rootProject.name = 'java-webpack-example'
 include 'backend'
+include 'frontend'

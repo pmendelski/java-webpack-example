@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="<%= htmlWebpackPlugin.options.config.lang %>">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= htmlWebpackPlugin.options.config.title %></title>
+  <!-- Favicons -->
+  <%= htmlWebpackPlugin.options.favicons['html_code'] %>
+  <!-- Styles -->
+  <% for (var css in htmlWebpackPlugin.files.css) { %>
+  <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
+  <% } %>
+</head>
+<body>
+  <!-- Single Page App Mounting Point -->
+  <div id="root"></div>
+  <!-- Webpack manifest -->
+  <%= htmlWebpackPlugin.files.webpackManifest %>
+  <!-- Window variables -->
+  <% if (htmlWebpackPlugin.options.window) { %>
+  <script>
+    <% for (var varName in htmlWebpackPlugin.options.window) { %>
+    window['<%=varName%>'] = <%= JSON.stringify(htmlWebpackPlugin.options.window[varName]) %>;
+    <% } %>
+  </script>
+  <% } %>
+  <!-- Scripts -->
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+  <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+  <% } %>
+</body>
+</html>

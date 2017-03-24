@@ -1,0 +1,33 @@
+extends: eslint-config-airbnb
+parser: babel-eslint
+env:
+  node: true
+  browser: true
+  mocha: true
+plugins: [react, import]
+settings:
+  import/parser: babel-eslint
+  import/resolve:
+    moduleDirectory: [node_modules, src]
+globals:
+  __DEV: false
+  __TEST: false
+  expect: false
+  sinon: false
+  shallow: false
+  mountWithStore: false
+  mount: false
+  render: false
+  specTest: false
+  uiTest: false
+  fetchMock: false
+  createStore: false
+  createAppStore: false
+rules:
+  comma-dangle: [error, never]
+  no-unused-expressions: [0]
+  no-underscore-dangle: [error, { allow: [__DEV, __TEST] }]
+  import/no-named-as-default: error
+  jsx-a11y/anchor-has-content: 0
+  react/jsx-filename-extension: [1, { extensions: [.js] }]
+  no-prototype-builtins: 0
