@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import List from './List';
 
-const FilterableList = ({ items, filter, onFilterChange }) => {
+const FilterableList = ({ items, filter, onFilterChange, className }) => {
   const filtered = items.filter(item => item.includes(filter));
   return (
-    <div>
+    <div className={className}>
       <input
         className="filter"
         value={filter}
@@ -18,12 +18,14 @@ const FilterableList = ({ items, filter, onFilterChange }) => {
 FilterableList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string).isRequired,
   filter: PropTypes.string.isRequired,
-  onFilterChange: PropTypes.func.isRequired
+  onFilterChange: PropTypes.func.isRequired,
+  className: PropTypes.string
 };
 
 FilterableList.defaultProps = {
   items: [],
-  filter: ''
+  filter: '',
+  className: 'filterable-list'
 };
 
 export default FilterableList;
