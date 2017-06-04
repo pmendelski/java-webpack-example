@@ -15,22 +15,10 @@ const receiveCountries = response => ({
   response
 });
 
-const fetchCountries = () =>
+export const fetchCountries = () =>
   (dispatch) => {
     dispatch(requestCountries());
     return fetch('/api/countries')
       .then(response => response.json())
       .then(json => dispatch(receiveCountries(json)));
   };
-
-const shouldFetchCountries = (state) => {
-  const countries = state.countries || {};
-  return !countries.items && !countries.isFetching;
-};
-
-export const fetchCountriesIfNeeded = () =>
-  (dispatch, getState) => (
-    shouldFetchCountries(getState()) ?
-      dispatch(fetchCountries()) :
-      dispatch()
-  );

@@ -45,5 +45,6 @@ const createConfig = (env = {}) => {
   console.log(`Starting webpack in mode: ${mode}`);
   console.log(`Configuration:\n${JSON.stringify(config, null, 2)}`);
   return buildWebpackConfig(config);
-}
+};
+
 export default createConfig;

@@ -1,15 +1,15 @@
 import {
   CHANGE_FILTER,
   changeFilter,
-  REQUEST_COUNTRIES,
+  fetchCountries,
   RECEIVE_COUNTRIES,
-  fetchCountriesIfNeeded
+  REQUEST_COUNTRIES
 } from './actions';
 
 specTest('Countries action creator', () => {
   afterEach(fetchMock.restore);
 
-  it('should create CHANGE_FILTER action', () => {
+  it('should emit filter change action', () => {
     // given
     const filter = 'new-filter-value';
     // when
@@ -21,13 +21,13 @@ specTest('Countries action creator', () => {
     });
   });
 
-  it('should fetch countries when no countries are cached', () => {
+  it('should fetch countries and emit request and receive actions', () => {
     // given
     const store = createStore();
     const response = { countries: ['Poland'] };
     fetchMock.get('/api/countries', response);
     // expect
-    return store.dispatch(fetchCountriesIfNeeded())
+    return store.dispatch(fetchCountries())
       .then(() => store.expectActions([
         { type: REQUEST_COUNTRIES },
         {
@@ -35,13 +35,5 @@ specTest('Countries action creator', () => {
           response
         }
       ]));
-  });
-
-  it('should not fetch countries if countries are cached', () => {
-    // given
-    const store = createStore({ countries: { items: ['Poland'] } });
-    // expect
-    return store.dispatch(fetchCountriesIfNeeded())
-      .then(() => store.expectNoActions());
   });
 });

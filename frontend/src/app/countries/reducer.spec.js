@@ -25,8 +25,8 @@ specTest('Countries reducer ', () => {
     const newState = reducer(undefined, action);
     // then
     expect(newState).containSubset({
-      items: [],
-      isFetching: true
+      items: null,
+      filter: ''
     });
   });
 
@@ -40,8 +40,7 @@ specTest('Countries reducer ', () => {
     const newState = reducer(undefined, action);
     // then
     expect(newState).containSubset({
-      items: action.response.countries,
-      isFetching: false
+      items: action.response.countries
     });
   });
 });

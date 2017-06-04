@@ -1,6 +1,6 @@
 import {
   changeFilter,
-  fetchCountriesIfNeeded
+  fetchCountries
 } from './actions';
 import reducer from './reducer';
 
@@ -21,24 +21,15 @@ specTest('Countries', () => {
           .containSubset({ filter }));
   });
 
-  it('should fetch countries when no countries are cached', () => {
+  it('should fetch countries', () => {
     // given
     const response = { countries: ['Poland'] };
     fetchMock.get('/api/countries', response);
     // expect
-    return store.dispatch(fetchCountriesIfNeeded())
+    return store.dispatch(fetchCountries())
       .then(() =>
         expect(store.getState()).containSubset({
-          items: response.countries,
-          isFetching: false
+          items: response.countries
         }));
-  });
-
-  it('should not fetch countries when countries are cached', () => {
-    // given
-    const storeWithCountries = createStore(reducer, { countries: { items: ['Poland'] } });
-    // expect
-    return storeWithCountries.dispatch(fetchCountriesIfNeeded())
-      .then(() => store.expectNoActions());
   });
 });

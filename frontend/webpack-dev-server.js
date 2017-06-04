@@ -13,7 +13,7 @@ export default {
   },
   proxy: {
     '**': {
-      target: 'http://localhost:8080',
+      target: 'http://localhost:7070',
       onProxyReq: (proxyReq, req) =>
         console.log('PROXY', req.originalUrl)
     }

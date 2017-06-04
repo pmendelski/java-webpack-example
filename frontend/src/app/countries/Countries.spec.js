@@ -16,7 +16,6 @@ uiTest('<Countries />', () => {
     const store = createStore({
       countries: {
         items: ['Poland', 'Germany'],
-        isFetching: false,
         filter: ''
       }
     });
@@ -32,7 +31,6 @@ uiTest('<Countries />', () => {
     const store = createStore({
       countries: {
         items: ['Poland', 'Germany'],
-        isFetching: false,
         filter: 'Pol'
       }
     });
