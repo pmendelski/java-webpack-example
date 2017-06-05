@@ -2,9 +2,9 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import './theme/global.scss';
 import Root from './app/Root';
 import configureStore from './app/store';
+import './theme/global.scss';
 
 const store = configureStore();
 

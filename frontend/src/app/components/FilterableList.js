@@ -6,7 +6,8 @@ const FilterableList = ({ items, filter, onFilterChange, className }) => {
   return (
     <div className={className}>
       <input
-        className="filter"
+        className="filter form-control"
+        placeholder="Search"
         value={filter}
         onChange={e => onFilterChange(e.target.value)}
       />

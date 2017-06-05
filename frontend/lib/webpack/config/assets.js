@@ -6,6 +6,12 @@ const resolveFileLoader = (assetDirName, opts) => (
     `file-loader?name=${assetDirName}/[name].[ext]`
 );
 
+const resolveAssetLoader = (assetDirName, opts) => (
+  opts.extractAssets ?
+    resolveFileLoader(assetDirName, opts) :
+    'url-loader?limit=1000000000'
+);
+
 const buildCopyPlugin = () =>
   new CopyWebpackPlugin([
     { from: 'assets' }
@@ -16,11 +22,11 @@ const buildAssetConfig = opts => ({
     rules: [
       {
         test: /\.(woff|woff2|eot|ttf)$/,
-        loader: resolveFileLoader('fonts', opts)
+        loader: resolveAssetLoader('fonts', opts)
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/,
-        loader: resolveFileLoader('images', opts)
+        loader: resolveAssetLoader('images', opts)
       }
     ]
   },

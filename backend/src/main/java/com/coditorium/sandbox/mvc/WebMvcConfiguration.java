@@ -1,4 +1,4 @@
-package com.coditorium.sandbox;
+package com.coditorium.sandbox.mvc;
 
 import java.util.concurrent.TimeUnit;
 import org.springframework.context.annotation.Configuration;

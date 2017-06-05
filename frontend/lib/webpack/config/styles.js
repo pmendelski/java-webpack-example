@@ -9,35 +9,66 @@ const buildExtractStylePlugin = opts =>
     disable: !opts.extractAssets
   });
 
+const cssModuleLoader = opts => ({
+  loader: 'css-loader',
+  options: {
+    modules: true,
+    importLoaders: true,
+    // https://github.com/webpack/css-loader#css-modules
+    localIdentName: '[name]__[local]___[hash:base64:5]',
+    sourceMap: opts.sourceMaps
+  }
+});
+
+const globalCssLoader = opts => ({
+  loader: 'css-loader',
+  options: {
+    importLoaders: true,
+    // https://github.com/webpack/css-loader#css-modules
+    localIdentName: '[name]__[local]___[hash:base64:5]',
+    sourceMap: opts.sourceMaps
+  }
+});
+
+const resolveUrlLoader = opts => ({
+  loader: 'resolve-url-loader',
+  options: { sourceMap: opts.sourceMaps }
+});
+
+const postCssLoader = opts => ({
+  loader: 'postcss-loader',
+  options: {
+    sourceMap: opts.sourceMaps,
+    plugins: () => [autoprefixer, precss]
+  }
+});
+
+const sassLoader = () => ({
+  loader: 'sass-loader'
+});
+
+const prepareStyleLoader = (cssLoader, opts) =>
+  ExtractTextPlugin.extract({
+    fallback: 'style-loader',
+    use: [
+      cssLoader(opts),
+      resolveUrlLoader(opts),
+      postCssLoader(opts),
+      sassLoader(opts)
+    ]
+  });
+
 const buildStyleConfig = opts => ({
   module: {
     rules: [
       {
         test: /(\.scss|\.css)$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [{
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: true,
-              // https://github.com/webpack/css-loader#css-modules
-              localIdentName: '[name]__[local]___[hash:base64:5]',
-              sourceMap: opts.sourceMaps
-            }
-          }, {
-            loader: 'resolve-url-loader',
-            options: { sourceMap: opts.sourceMaps }
-          }, {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: opts.sourceMaps,
-              plugins: () => [autoprefixer, precss]
-            }
-          }, {
-            loader: 'sass-loader'
-          }]
-        })
+        exclude: /(global\.scss|global\.css)$/,
+        use: prepareStyleLoader(cssModuleLoader, opts)
+      },
+      {
+        test: /(global\.scss|global\.css)$/,
+        use: prepareStyleLoader(globalCssLoader, opts)
       }
     ]
   },

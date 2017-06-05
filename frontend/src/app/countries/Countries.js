@@ -4,9 +4,17 @@ import { fetchCountries } from './actions';
 import CountryList from './CountryList';
 import LazyComponent from '../components/LazyComponent';
 
+const CenteredCountryList = () => (
+  <div className="row">
+    <div className="col-md-4 col-md-offset-4">
+      <CountryList />
+    </div>
+  </div>
+);
+
 const mapState = state => ({
   isReady: !!state.countries.items,
-  children: <CountryList />
+  children: <CenteredCountryList />
 });
 
 const mapDispatch = dispatch => ({
