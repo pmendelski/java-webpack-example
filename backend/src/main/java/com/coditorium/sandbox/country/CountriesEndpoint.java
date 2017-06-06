@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/countries")
 class CountriesEndpoint {
-    private final CountriesResponse countriesResponse = new CountriesResponse();
+  private final CountriesResponse countriesResponse = new CountriesResponse();
 
-    @GetMapping
-    CountriesResponse getCountries() {
-        return countriesResponse;
-    }
+  @GetMapping
+  CountriesResponse getCountries() {
+    return countriesResponse;
+  }
 }

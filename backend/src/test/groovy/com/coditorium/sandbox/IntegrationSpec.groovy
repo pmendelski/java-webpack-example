@@ -14,13 +14,13 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 abstract class IntegrationSpec extends Specification {
 
-    @Autowired
-    WebApplicationContext webApplicationContext
+  @Autowired
+  WebApplicationContext webApplicationContext
 
-    MockMvc mockMvc
+  MockMvc mockMvc
 
-    void setup() {
-        mockMvc = webAppContextSetup(webApplicationContext)
-            .build()
-    }
+  void setup() {
+    mockMvc = webAppContextSetup(webApplicationContext)
+        .build()
+  }
 }

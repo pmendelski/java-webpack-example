@@ -1,7 +1,7 @@
 allprojects {
-    version = '1.0.0-SNAPSHOT'
+  version = '1.0.0-SNAPSHOT'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+  gradleVersion = '3.5'
 }

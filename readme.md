@@ -16,6 +16,3 @@ Related projects:
 
 - [react-intro](https://github.com/mendlik/react-intro) - Introduction to react and redux.
 - [java-react-example](https://github.com/mendlik/java-webpack-example) - Simplified example without a module bundler.
-
-Tip: [How to enable LiveReload in IntelliJ](http://stackoverflow.com/a/35895848/2284884)
-
