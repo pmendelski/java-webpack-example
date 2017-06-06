@@ -12,6 +12,7 @@ const buildExtractStylePlugin = opts =>
 const cssModuleLoader = opts => ({
   loader: 'css-loader',
   options: {
+    minimize: opts.optimize,
     modules: true,
     importLoaders: true,
     // https://github.com/webpack/css-loader#css-modules
@@ -23,6 +24,7 @@ const cssModuleLoader = opts => ({
 const globalCssLoader = opts => ({
   loader: 'css-loader',
   options: {
+    minimize: opts.optimize,
     importLoaders: true,
     // https://github.com/webpack/css-loader#css-modules
     localIdentName: '[name]__[local]___[hash:base64:5]',
